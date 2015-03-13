@@ -1,0 +1,48 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: samuel perez
+// 
+// Create Date:    11:33:42 03/13/2015 
+// Design Name: 
+// Module Name:    ffjk 
+// Project Name:    flip flop JK 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
+module ffjk( input j,k, clock, 
+					output q, noq
+    );
+
+
+   parameter cero = 0;
+   parameter uno = 1;
+
+   (* FSM_ENCODING="SEQUENTIAL", SAFE_IMPLEMENTATION="NO" *) reg state = cero;
+
+   always@(posedge clock)
+         (* FULL_CASE, PARALLEL_CASE *) case (state)
+            cero: begin
+               if (~j)
+                  state <= cero;
+               else
+                  state <= uno;
+            end
+            uno: begin
+               if (!k)
+                  state <= uno;
+               else
+                  state <= cero;
+            end
+         endcase
+	assign q=state;
+	assign noq=~q;
+endmodule
