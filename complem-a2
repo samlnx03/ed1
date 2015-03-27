@@ -1,0 +1,108 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date:    07:49:11 03/26/2015 
+// Design Name: 
+// Module Name:    main 
+// Project Name: 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
+module main(
+    input x,
+    input clk,
+	 input reset,
+    output y
+    );
+
+   parameter A = 2'b00;
+   parameter B = 2'b01;
+   parameter C = 2'b10;
+   parameter D = 2'b11;
+	
+	//reg yaux;   // y auxiliar para no declarar reg a y y 
+					// que siga funcionando al descomentar la maquina mealy
+
+   (* FSM_ENCODING="SEQUENTIAL", SAFE_IMPLEMENTATION="NO" *) reg [1:0] state = A;
+
+	assign y=state[1] ^ state[0];
+	
+   always@(posedge clk)
+      if (reset) begin
+         state <= A;
+         //yaux <= 0;
+      end
+      else
+         (* FULL_CASE, PARALLEL_CASE *) case (state)
+            A : begin
+               if (x==0)
+                  state <= A;
+               else
+                  state <= B;
+               //yaux <= 0;
+            end
+            B : begin
+               if (x==0)
+                  state <= C;
+               else
+                  state <= D;
+               //yaux <= 1;
+            end
+            C : begin
+               if (x==0)
+                  state <= C;
+               else
+                  state <= D;
+               //yaux <= 1;
+            end
+            D : begin
+               if (x==0)
+                  state <= C;
+               else
+                  state <= D;
+               //yaux <= 0;
+            end
+         endcase
+	
+
+/* enfoque mealy
+
+   parameter A = 1'b0;
+   parameter B = 1'b1;
+
+   (* FSM_ENCODING="SEQUNTIAL", SAFE_IMPLEMENTATION="NO" *) reg state = A;
+
+   always@(posedge clk)
+      if (reset) begin
+         state <= A;
+      end
+      else
+         (* FULL_CASE, PARALLEL_CASE *) case (state)
+            A : begin
+               if (x==0)
+                  state <= A;
+               else
+                  state <= B;
+            end
+            B : begin
+					state <= B;
+            end
+         endcase
+
+   assign y = x ^ state;
+   //assign <output2> = <logic_equation_based_on_states_and_inputs>;
+   // Add other output equations as necessary
+*/							
+
+
+endmodule
