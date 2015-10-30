@@ -1,0 +1,43 @@
+module prueba0(
+	input a,b,c, 
+	output x,y
+	);
+
+	wire h;
+
+	not g1(y, b);
+	and g2(x,h,c);
+	or  g3(h,a,y);
+
+endmodule
+
+
+module prueba0_t();
+	reg a,b,c;	// la entradas son reg
+	wire x,y;	// las salidas son wire
+
+	// instanciar el modulo a simular
+	// (como quien dice, conectarlo)
+	prueba0  p0(a,b,c,x,y);
+
+	// definir estimulos en el tiempo para las entradas
+	initial begin
+		a=0;
+		b=0;
+		c=0;
+		#50 b=1;
+		#20 a=1;
+		#20 b=0;
+		#10 a=0;
+		#10 c=1;
+		#40 b=1;
+		#50 a=1;
+		#50 b=0;
+		#200 $finish;
+	end
+	initial begin
+		$display("t\ta\tb\tc\ty\tx");
+		$monitor("%3d\t%b\t%b\t%b\t%b\t%b", $time,a,b,c,y,x);
+	end
+
+endmodule
